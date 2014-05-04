@@ -7,18 +7,23 @@
   <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.0.0/jasmine_favicon.png">
   <link rel="stylesheet" type="text/css" href="lib/jasmine-2.0.0/jasmine.css">
 
+  <!-- Sea.Js Module Loader -->
+  <script type="text/javascript" src="lib/seajs/sea.js"></script>
+  <script type="text/javascript" src="lib/seajs/seajs-text-debug.js"></script>
+
+  <!-- Jasmine -->
   <script type="text/javascript" src="lib/jasmine-2.0.0/jasmine.js"></script>
   <script type="text/javascript" src="lib/jasmine-2.0.0/jasmine-html.js"></script>
   <script type="text/javascript" src="lib/jasmine-2.0.0/boot.js"></script>
 
-  <!-- include source files here... -->
+  <!-- Marked.Js -->
   <script type="text/javascript" src="../../lib/marked.js"></script>
-
-  <!-- include spec files here... -->
-  <script type="text/javascript" src="spec/TokenLocation.js"></script>
-
 </head>
 
 <body>
+<script>
+  // Use sea.js to load specs
+  seajs.use("./spec/TokenLocation.js");
+</script>
 </body>
 </html>
