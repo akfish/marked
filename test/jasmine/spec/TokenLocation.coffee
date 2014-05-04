@@ -1,28 +1,4 @@
 define (require, exports, module) ->
-        # Load tests in ../../tests/
-        # * name - test data file name (without extension)
-        # * test - callback = (markdown_src, html_src, done) ->
-        runTest = (name, test, done) ->
-                data_path = "../../tests/"
-                md_path = "#{data_path}#{name}.text"
-                html_path = "#{data_path}#{name}.html"
-
-                require.async [md_path, html_path], (md, html) ->
-                        test? md, html, done
-
-        # Test generate
-        generate = (md, html, done) ->
-                actual = marked(md).replace(/\s/g, '')
-                expected = html.replace(/\s/g, '')
-                expect(actual).toEqual(expected)
-                done()
-
-        # Original test spec
-        it_runs = (name) ->
-                should = "should parses '#{name}'"
-                it should, (done) ->
-                        runTest name, generate, done
-
         # Test data file names
         # Used to establish a baseline so I will know if I break anything
         # Some of them won't pass so they are commented out
@@ -85,6 +61,50 @@ define (require, exports, module) ->
                 "tricky_list"
         ]
                         
+        # Load tests in ../../tests/
+        # * name - test data file name (without extension)
+        # * test - callback = (markdown_src, html_src, done) ->
+        runTest = (name, test, done) ->
+                data_path = "../../tests/"
+                md_path = "#{data_path}#{name}.text"
+                html_path = "#{data_path}#{name}.html"
+
+                require.async [md_path, html_path], (md, html) ->
+                        test? md, html, done
+
+        # Test generate
+        generate = (md, html, done) ->
+                actual = marked(md).replace(/\s/g, '')
+                expected = html.replace(/\s/g, '')
+                expect(actual).toEqual(expected)
+                done()
+
+        # Original test spec
+        it_runs = (name) ->
+                should = "should parses '#{name}'"
+                it should, (done) ->
+                        runTest name, generate, done
+
+        # Test token location
+        locateToken = (md, html, done) ->
+                tokens = marked.lexer md
+
+                for token in tokens
+                        # Location data
+                        l = token.loc
+                        # console.log token
+                        # Location data should exists
+                        expect(l?).toBe true
+                        # TODO: Location should be correct
+                        #
+                done()
+                
+        # Location test spec
+        it_locates = (name) ->
+                should = "should locates '#{name}'"
+                it should, (done) ->
+                        runTest name, locateToken, done
+                        
         exports = describe "Marked.Js", ->
                 it 'should exists', ->
                         expect(marked?).toBe true
@@ -106,22 +126,5 @@ define (require, exports, module) ->
                                 it_runs name
                         
                 describe 'Token', ->
-                        it 'should have location data'
-
-                        describe 'Location', ->
-                                it "is correct in 'space' token"
-                                it "is correct in 'code' token"
-                                it "is correct in 'heading' token"
-                                it "is correct in 'table' token"
-                                it "is correct in 'hr' token"
-                                it "is correct in 'blockquote_start' token"
-                                it "is correct in 'blockquote_end' token"
-                                it "is correct in 'list_start' token"
-                                it "is correct in 'list_item_start' token"
-                                it "is correct in 'loose_item_start' token"
-                                it "is correct in 'list_item_end' token"
-                                it "is correct in 'list_end' token"
-                                it "is correct in 'paragraph' token"
-                                it "is correct in 'html' token"
-                                it "is correct in 'test' token"
-
+                        for name in test_names
+                                it_locates name
