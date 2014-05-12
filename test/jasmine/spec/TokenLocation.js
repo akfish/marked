@@ -27,12 +27,15 @@
       });
     };
     locateToken = function(md, html, done) {
-      var l, token, tokens, _i, _len;
+      var actual, l, token, tokens, _i, _len;
       tokens = marked.lexer(md);
       for (_i = 0, _len = tokens.length; _i < _len; _i++) {
         token = tokens[_i];
         l = token.loc;
         expect(l != null).toBe(true);
+        expect(l.start_index).not.toBe(-1);
+        actual = md.substr(l.start_index, l.length);
+        expect(actual).toEqual(l.src);
       }
       return done();
     };

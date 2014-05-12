@@ -92,11 +92,15 @@ define (require, exports, module) ->
                 for token in tokens
                         # Location data
                         l = token.loc
-                        # console.log token
                         # Location data should exists
                         expect(l?).toBe true
-                        # TODO: Location should be correct
-                        #
+                        # Start index should be caculated
+                        expect(l.start_index).not.toBe -1
+                        # Location should be correct
+                        # This is done by clipping original md with location data
+                        # And compare to the l.src field
+                        actual = md.substr l.start_index, l.length;
+                        expect(actual).toEqual l.src
                 done()
                 
         # Location test spec
